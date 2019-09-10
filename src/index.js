@@ -1,4 +1,4 @@
-import '@babel/polyfill' // treba babel/polyfill, lebo babel nepozna polyfill pre prod, ide len v babel-node v deve (npm run start by crashol)
+import '@babel/polyfill/noConflict' // treba babel/polyfill, lebo babel nepozna polyfill pre prod, ide len v babel-node v deve (npm run start by crashol)
 import { GraphQLServer, PubSub } from 'graphql-yoga';
 import { resolvers, fragmentReplacements } from './resolvers/index'
 import prisma from './prisma'

@@ -7,7 +7,7 @@ const prisma = new Prisma({
     // ak mame typ User vygeneruje sa mu automaticky createUser, updateUser subscrioptions, query
 	typeDefs: './src/generated/prisma.graphql',
 	endpoint: process.env.PRISMA_ENDPOINT,
-    secret: 'p@ssw0rd', // aby sme mali pristup k 4000, 4466 bude stale locknuta iba s tokenom sa k nej dostaneme
+    secret: process.env.PRISMA_SECRET, // aby sme mali pristup k 4000, 4466 bude stale locknuta iba s tokenom sa k nej dostaneme
     fragmentReplacements // definovane fragmenty
 });
 
