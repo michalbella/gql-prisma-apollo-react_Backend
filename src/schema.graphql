@@ -1,0 +1,146 @@
+#! SCHEMA - definuje vsetky operacie ktore povolime - QUERING DATA OPERATIONS
+#  Scalar values - String, Int, Boolean, Float, ID
+#  greeting(name: String) je Operation Argumnet - client getuje data na server
+#  User a Post je Custom Type a me sa asociacuje na typ User
+#  Vykricnik znamnea ze vzdy returne String a nemoze byt null, tj ked neni ! hodnota je optional
+#  inputData nemoze byt User objekt ale osobytny input kde definujeme input data ktore posleme do mutacie
+#  inputData mozu byt len scalarne hodnoty nie custom objekt
+#  author: User! relation, ktora hovori o tom ze kazdy Post ma svojho authora non nullable
+
+#! import z generovanej schemy Prismy aby sa nemusel robit manualne ENUM pre sorting
+# import UserOrderByInput, PostOrderByInput, CommentOrderByInput from './generated/prisma.graphql'
+
+#* QUERY
+type Query {
+	users(queryString: String, first: Int, skip: Int, after: String, orderBy: UserOrderByInput): [User!]!
+	posts(queryString: String, first: Int, skip: Int, after: String, orderBy: PostOrderByInput): [Post!]!
+	myPosts(queryString: String, first: Int, skip: Int, after: String, orderBy: UserOrderByInput): [Post!]!
+	comments(first: Int, skip: Int, after: String, orderBy: CommentOrderByInput): [Comment!]!
+	post(id: ID!): Post!
+	me: User!
+}
+
+#* MUTATIONS
+type Mutation {
+	# CRUD USERS
+	createUser(inputData: CreateUserInput!): AuthPayload!
+	deleteUser: User!
+	updateUser(inputData: UpdateUserInput!): User!
+	# CRUD POSTS
+	createPost(inputData: CreatePostInput!): Post!
+	deletePost(id: ID!): Post!
+	updatePost(inputData: UpdatePostInput!, id: ID!): Post!
+	# CRUD COMMENTS
+	createComment(inputData: CreateCommentInput!): Comment!
+	deleteComment(id: ID!): Comment!
+	updateComment(inputData: UpdateCommentInput!, id: ID!): Comment!
+	# LOGIN
+	login(inputData: loginUserInput!): AuthPayload!
+}
+
+#* SUBSCRIPTIONS
+type Subscription {
+	comment(postId: ID!): CommentSubscriptionPayload!
+	post: PostSubscriptionPayload!
+	myPost: PostSubscriptionPayload!
+}
+
+#* INPUTS - USERS
+input loginUserInput {
+	email: String!
+	password: String!
+}
+
+input CreateUserInput {
+	name: String!
+	email: String!
+	password: String!
+}
+
+input UpdateUserInput {
+	name: String
+	password: String
+	email: String
+}
+
+input CreatePostInput {
+	title: String!
+	body: String!
+	# bude posielat id z tokenu a nie na tvrdo napisane ID!
+	published: Boolean!
+	# author: ID!
+}
+
+input UpdatePostInput {
+	title: String
+	body: String
+	published: Boolean
+}
+
+input CreateCommentInput {
+	text: String!
+	post: ID!
+}
+
+input UpdateCommentInput {
+	text: String
+}
+
+#* TYPES
+
+type AuthPayload {
+	# pre return tokenu aj user objektu
+	token: String!
+	user: User!
+}
+
+type User {
+	id: ID!
+	name: String!
+	password: String!
+	email: String # email sa zobrazi len v me(), ale nezobrazi sa v users(), preto je ?optional
+	posts: [Post!]!
+	comments: [Comment!]!
+	createdAt: String!
+	updatedAt: String!
+}
+
+type Post {
+	id: ID!
+	title: String!
+	body: String!
+	published: Boolean!
+	author: User!
+	comments: [Comment!]!
+	createdAt: String!
+	updatedAt: String!
+}
+
+type Comment {
+	id: ID!
+	text: String!
+	author: User!
+	post: Post!
+	createdAt: String!
+	updatedAt: String!
+}
+
+#* SUBSCRIPTION TYPES - PAYLOADS
+enum MutationType {
+	CREATED
+	UPDATED
+	DELETED
+}
+
+type PostSubscriptionPayload {
+	mutation: MutationType!
+	node: Post
+}
+
+type CommentSubscriptionPayload {
+	mutation: MutationType!
+	# premenovane data -> node
+	# lebo Prisma neposiela data vo fielde data ale vo fielde node allow nullable
+	# data: Comment!
+	node: Comment
+}
