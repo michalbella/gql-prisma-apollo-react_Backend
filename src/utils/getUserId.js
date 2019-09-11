@@ -13,7 +13,7 @@ const getUserId = (request, requireAuth = true) => {
     if (header) {
         // pre autorizovanych pouzivatelov, ktori maju token
         const token = header.replace('Bearer ', '') // ziskanie tokenu z request + odstranenie beareru
-        const decoded = jwt.verify(token, 'thisisasecret') // rozdekodovanie
+        const decoded = jwt.verify(token, process.env.JWT_SECRET) // rozdekodovanie
         return decoded.userId
     }
     // ak je true - trena autentifikaciu tokenom
