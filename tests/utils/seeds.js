@@ -14,6 +14,7 @@ const seeds = async () => {
         }
     })
 
+    
     await prisma.mutation.createPost({
         data: {
             title: 'test post',
