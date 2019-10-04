@@ -1,4 +1,6 @@
-endpoint: ${env:PRISMA_ENDPOINT}
+# endpoint: ${env:PRISMA_ENDPOINT}
+endpoint: https://bella-graphql-9eeb6ab548.herokuapp.com/graphql-prisma/dev
+# endpoint: http://localhost:4466/test
 datamodel: datamodel.graphql
 secret: ${env:PRISMA_SECRET}
 # endpoint: https://bella-graphql-9eeb6ab548.herokuapp.com/bella-graphql/prod

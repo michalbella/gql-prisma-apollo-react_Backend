@@ -1,4 +1,4 @@
-# vygeneruje API  - vsetky mutacie subscriptiony a tabulky
+# ! vygeneruje API  - vsetky mutacie subscriptiony a tabulky
 type User {
   id: ID! @id @unique
   name: String!

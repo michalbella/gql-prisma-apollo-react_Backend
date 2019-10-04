@@ -6,10 +6,8 @@ services:
     ports:
     - "4466:4466"
     environment:
-     LOG_LEVEL: TRACE # Log SQL queries
       PRISMA_CONFIG: |
         port: 4466
-        LOG_LEVEL: TRACE # Log SQL queries
         # uncomment the next line and provide the env var PRISMA_MANAGEMENT_API_SECRET=my-secret to activate cluster security
         # managementApiSecret: my-secret
         databases:
@@ -17,7 +15,7 @@ services:
             connector: postgres
             host: ec2-54-246-84-100.eu-west-1.compute.amazonaws.com
             database: d806gdt6j9cfmu
-            schema: public
+            schema: test
             user: awvzbtorxbdoam
             password: 61667bbe1ba12092e64ff9c311a1332e8bb0f2c4aa63c251a7cfcab0e8b0ca49
             ssl: true

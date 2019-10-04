@@ -7,24 +7,39 @@
     "start": "node dist/index.js",
     "heroku-postbuild": "babel src --out-dir dist --copy-files",
     "dev": "env-cmd ./config/dev.env nodemon src/index.js --ext js,graphql --exec babel-node",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "get-schema": "graphql get-schema -p prisma"
+    "test": "env-cmd ./config/dev.env jest --watch --runInBand",
+    "get-schema": "graphql get-schema -p prisma --dotenv config/dev.env"
+  },
+  "jest": {
+    "globalSetup": "./tests/jest/globalSetup.js",
+    "globalTeardown": "./tests/jest/globalTeardown.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@babel/polyfill": "^7.0.0",
-    "babel-cli": "^6.26.0",
-    "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babel-preset-env": "^1.7.0",
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.3.3",
+    "@babel/node": "^7.2.2",
+    "@babel/plugin-transform-object-assign": "^7.0.0",
+    "@babel/polyfill": "^7.2.5",
+    "@babel/preset-env": "^7.3.1",
+    "@babel/register": "^7.0.0",
+    "apollo-boost": "^0.1.28",
     "bcryptjs": "^2.4.3",
+    "cross-fetch": "^2.2.3",
     "env-cmd": "^8.0.2",
+    "graphql": "^14.5.8",
     "graphql-cli": "^2.16.4",
     "graphql-yoga": "^1.14.10",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^8.4.0",
     "prisma-binding": "^2.1.1"
   },
   "devDependencies": {
-    "nodemon": "^1.17.5"
+    "@babel/node": "^7.0.0",
+    "@babel/plugin-transform-runtime": "^7.6.2",
+    "babel-core": "^7.0.0-bridge.0",
+    "babel-jest": "^23.4.2",
+    "jest": "^24.1.0",
+    "nodemon": "^1.18.9"
   }
 }
