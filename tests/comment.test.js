@@ -3,7 +3,7 @@ import 'core-js';
 import 'regenerator-runtime/runtime';
 import prisma from '../src/prisma';
 import seeds, {
-    userOne, userTwo, commentOne, commentTwo
+    userOne, commentOne, commentTwo
 } from './utils/seeds'
 import getClient from './utils/getClient';
 import {
@@ -40,5 +40,4 @@ test('[DELETE]: should delete own comment', async () => {
 
     expect(exist).toBe(false)
 });
-
-// TODO: testy pre GET, CREATE a UPDATE Commnets
+// TODO: testy pre GET, CREATE a UPDATE Commnets 
