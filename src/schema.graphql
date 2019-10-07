@@ -35,7 +35,7 @@ type Mutation {
 	deleteComment(id: ID!): Comment!
 	updateComment(inputData: UpdateCommentInput!, id: ID!): Comment!
 	# LOGIN
-	login(inputData: loginUserInput!): AuthPayload!
+	login(inputData: LoginUserInput!): AuthPayload!
 }
 
 #* SUBSCRIPTIONS
@@ -46,7 +46,7 @@ type Subscription {
 }
 
 #* INPUTS - USERS
-input loginUserInput {
+input LoginUserInput {
 	email: String!
 	password: String!
 }
