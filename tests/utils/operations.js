@@ -114,8 +114,8 @@ const DELETE_POST = gql `
         }
     }
 `
-
-// * Delete Post
+// ! Comment Operations
+// * Delete Comment
 const DELETE_COMMENT = gql `
     mutation($id: ID!) {
         deleteComment(
@@ -126,6 +126,19 @@ const DELETE_COMMENT = gql `
         }
     }
 `
+// * Subscribe Comment
+const SUBSCRIBE_COMMENT = gql`
+    subscription($postId: ID!) {
+        comment(postId: $postId){
+            mutation
+            node {
+                id
+                text
+            }
+        }
+    }
+`
+
 export {
     CREATE_USER,
     GET_USERS,
@@ -136,5 +149,6 @@ export {
     UPDATE_POST,
     CREATE_POST,
     DELETE_POST,
-    DELETE_COMMENT
+    DELETE_COMMENT,
+    SUBSCRIBE_COMMENT
 }

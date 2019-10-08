@@ -3,11 +3,12 @@ import 'core-js';
 import 'regenerator-runtime/runtime';
 import prisma from '../src/prisma';
 import seeds, {
-    userOne, commentOne, commentTwo
+    userOne, commentOne, commentTwo, postOne
 } from './utils/seeds'
 import getClient from './utils/getClient';
 import {
-   DELETE_COMMENT
+   DELETE_COMMENT,
+   SUBSCRIBE_COMMENT
 } from './utils/operations';
 
 const client = getClient()
@@ -40,4 +41,29 @@ test('[DELETE]: should delete own comment', async () => {
 
     expect(exist).toBe(false)
 });
-// TODO: testy pre GET, CREATE a UPDATE Commnets 
+
+// TODO: testy pre GET, CREATE a UPDATE Commnets
+
+// ! SUBSCRIPTIONS Comment
+test('[SUBSCRIBE]: should subscribe to commnet for a post', async (done) => {
+    const variables = {
+        postId: postOne.post.id
+    }
+    client.subscribe({ query: SUBSCRIBE_COMMENT, variables }).subscribe({
+        // vzdy ked sa koment zmeni zavola sa next() - ked sa zmaze koment 1x
+        // ak by bolo viac operacii createComment, updateComment, deleteCommnet tak sa zavola 3x
+        next(response) {
+            // * Assertion
+            console.log(response)
+            expect(response.data.comment.mutation).toBe('DELETED')
+            // kod sa vykona az po tom ked test prejde - oneskorene
+            // treba done lebo bez neho sa funkcia nestihne vykonat v async procese padne 
+            // hned na mutation.deleteCommnet a next neberie do uvahy, preto treba pockat na done()
+            // ! test nebude povazovany za dokonceny pokial sa nezavola done()
+            done()
+        }
+    })
+
+    // * Operacia nad comentom - napr. DELETE_COMMENT
+    await prisma.mutation.deleteComment({ where: { id: commentOne.comment.id }})
+});
