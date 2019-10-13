@@ -8,7 +8,8 @@ import seeds, {
 import getClient from './utils/getClient';
 import {
    DELETE_COMMENT,
-   SUBSCRIBE_COMMENT
+   SUBSCRIBE_COMMENT,
+   SUBSCRIBE_POST
 } from './utils/operations';
 
 const client = getClient()
@@ -44,7 +45,7 @@ test('[DELETE]: should delete own comment', async () => {
 
 // TODO: testy pre GET, CREATE a UPDATE Commnets
 
-// ! SUBSCRIPTIONS Comment
+// ! SUBSCRIBING COMMENT
 test('[SUBSCRIBE]: should subscribe to commnet for a post', async (done) => {
     const variables = {
         postId: postOne.post.id
@@ -54,7 +55,6 @@ test('[SUBSCRIBE]: should subscribe to commnet for a post', async (done) => {
         // ak by bolo viac operacii createComment, updateComment, deleteCommnet tak sa zavola 3x
         next(response) {
             // * Assertion
-            console.log(response)
             expect(response.data.comment.mutation).toBe('DELETED')
             // kod sa vykona az po tom ked test prejde - oneskorene
             // treba done lebo bez neho sa funkcia nestihne vykonat v async procese padne 
@@ -63,7 +63,25 @@ test('[SUBSCRIBE]: should subscribe to commnet for a post', async (done) => {
             done()
         }
     })
-
     // * Operacia nad comentom - napr. DELETE_COMMENT
     await prisma.mutation.deleteComment({ where: { id: commentOne.comment.id }})
+});
+
+// ! SUBSCRIBING POST
+test('[SUBSCRIBE]: should subscribe to changes for published post', async (done) => {
+    client.subscribe({ query: SUBSCRIBE_POST }).subscribe({
+        next(response) {
+            expect(response.data.post.mutation).toBe('DELETED')
+            done()
+        }
+    })
+    // FIXME: autora treba dat do createPost
+    // const inputData = {
+    //     title: "post by subscription",
+    //     body: "subscription",
+    //     published: true
+    //   }
+    // await prisma.mutation.createPost({ data: inputData })
+    
+    await prisma.mutation.deletePost({ where: { id: postOne.post.id }})
 });

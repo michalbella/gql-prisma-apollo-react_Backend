@@ -139,6 +139,15 @@ const SUBSCRIBE_COMMENT = gql`
     }
 `
 
+// * Subscribe Post
+const SUBSCRIBE_POST = gql`
+    subscription {
+        post {
+            mutation
+        }
+    }
+`
+
 export {
     CREATE_USER,
     GET_USERS,
@@ -150,5 +159,6 @@ export {
     CREATE_POST,
     DELETE_POST,
     DELETE_COMMENT,
-    SUBSCRIBE_COMMENT
+    SUBSCRIBE_COMMENT,
+    SUBSCRIBE_POST
 }
